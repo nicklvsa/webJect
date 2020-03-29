@@ -25,5 +25,5 @@ func buildHandlers() {
 func main() {
 	buildHandlers()
 	logger.Info("API started!")
-	logger.Err(http.ListenAndServe(":8080", nil))
+	logger.Err(http.ListenAndServe(":8081", nil))
 }
