@@ -35,7 +35,7 @@ func BuildResponse(errCode int, contentMsg, errMsg interface{}, w http.ResponseW
 		logger.Err("Could not build the api response!")
 	}
 
-	logger.Info(response)
+	logger.Info(string(response))
 	return response
 }
 
