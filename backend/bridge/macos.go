@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"webject/shared"
 )
 
@@ -63,5 +64,6 @@ func (macos *MacOS) GetBundleIdentifierByApp(appName string) (string, error) {
 		return "", fmt.Errorf("STD_ERR: %s || GO_ERR: %s", stdErr.String(), err.Error())
 	}
 
-	return stdOut.String(), nil
+	response := strings.Replace(strings.Trim(stdOut.String()), "\n", "")
+	return response, nil
 }
