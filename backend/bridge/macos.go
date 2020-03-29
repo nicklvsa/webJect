@@ -64,6 +64,6 @@ func (macos *MacOS) GetBundleIdentifierByApp(appName string) (string, error) {
 		return "", fmt.Errorf("STD_ERR: %s || GO_ERR: %s", stdErr.String(), err.Error())
 	}
 
-	response := strings.ReplaceAll(strings.Trim(stdOut.String()), "\n", "")
+	response := strings.ReplaceAll(strings.TrimSpace(stdOut.String()), "\n", "")
 	return response, nil
 }
