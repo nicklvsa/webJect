@@ -144,7 +144,7 @@ func TweakAPIHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(response)
 		return
 
-	case "get_identifier":
+	case "identify":
 
 		identifierData := make(map[string]string)
 		err := json.NewDecoder(r.Body).Decode(&identifierData)
