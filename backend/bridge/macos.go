@@ -52,9 +52,13 @@ func (macos *MacOS) GetBundleIdentifierByApp(appName string) (string, error) {
 
 	strCmd := fmt.Sprintf(`'id of app "%s"'`, appName)
 
-	cmd := exec.Command("/usr/bin/osascript", "-e", strCmd, "-e", "end")
-	cmd.Stdout = &stdOut
-	cmd.Stderr = &stdErr
+	cmd := exec.Command("/usr/bin/osascript", "-e", strCmd)
+	//cmd.Stdout = &stdOut
+	//cmd.Stderr = &stdErr
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
 
 	fmt.Println(cmd.String())
 
