@@ -2,8 +2,6 @@ package bridge
 
 import (
 	"webject/shared"
-
-	"github.com/artdarek/go-unzip"
 )
 
 //consts for macos
@@ -24,9 +22,7 @@ func (os *MacOS) AddTweakPlugin(fileName string) error {
 	if err != nil {
 		return err
 	}*/
-
-	uz := unzip.New(fileName, InstallDirName)
-	err := uz.Extract()
+	err := shared.Decompress(fileName, InstallDirName)
 	if err != nil {
 		return err
 	}

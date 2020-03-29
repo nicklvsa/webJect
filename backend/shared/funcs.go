@@ -49,61 +49,77 @@ func IsMacOS() bool {
 	return strings.Contains(runtime.GOOS, "darwin")
 }
 
-//Decompress - unzips a zip file
-func Decompress(src string, dest string) ([]string, error) {
-
-	var filenames []string
-
+//Decompress - decompresses and walks a tree
+func Decompress(src, dest string) error {
 	r, err := zip.OpenReader(src)
 	if err != nil {
-		return filenames, err
+		return err
 	}
-	defer r.Close()
-
-	for _, f := range r.File {
-
-		// Store filename/path for returning and using later on
-		fpath := filepath.Join(dest, f.Name)
-
-		// Check for ZipSlip. More Info: http://bit.ly/2MsjAWE
-		if !strings.HasPrefix(fpath, filepath.Clean(dest)+string(os.PathSeparator)) {
-			return filenames, fmt.Errorf("%s: illegal file path", fpath)
+	defer func() {
+		if err := r.Close(); err != nil {
+			panic(err)
 		}
+	}()
 
-		filenames = append(filenames, fpath)
+	os.MkdirAll(dest, 0755)
 
-		if f.FileInfo().IsDir() {
-			// Make Folder
-			os.MkdirAll(fpath, os.ModePerm)
-			continue
-		}
-
-		// Make File
-		if err = os.MkdirAll(filepath.Dir(fpath), os.ModePerm); err != nil {
-			return filenames, err
-		}
-
-		outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
-		if err != nil {
-			return filenames, err
-		}
-
+	// Closure to address file descriptors issue with all the deferred .Close() methods
+	extractAndWriteFile := func(f *zip.File) error {
 		rc, err := f.Open()
 		if err != nil {
-			return filenames, err
+			return err
 		}
+		defer func() {
+			if err := rc.Close(); err != nil {
+				panic(err)
+			}
+		}()
 
-		_, err = io.Copy(outFile, rc)
+		path := filepath.Join(dest, f.Name)
 
-		// Close the file without defer to close before next iteration of loop
-		outFile.Close()
-		rc.Close()
+		if f.FileInfo().IsDir() {
+			os.MkdirAll(path, f.Mode())
+		} else if f.FileInfo().Mode()&os.ModeSymlink != 0 {
+			buffer := make([]byte, f.FileInfo().Size())
+			size, err := rc.Read(buffer)
+			if err != nil {
+				return err
+			}
 
+			target := string(buffer[:size])
+
+			err = os.Symlink(target, path)
+			if err != nil {
+				return err
+			}
+		} else {
+			os.MkdirAll(filepath.Dir(path), f.Mode())
+			f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+			if err != nil {
+				return err
+			}
+			defer func() {
+				if err = f.Close(); err != nil {
+					panic(err)
+				}
+			}()
+
+			_, err = io.Copy(f, rc)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+
+	for _, f := range r.File {
+		err := extractAndWriteFile(f)
 		if err != nil {
-			return filenames, err
+			return err
 		}
 	}
-	return filenames, nil
+
+	return nil
 }
 
 //CleanDecompression - removes the zip files after extraction
