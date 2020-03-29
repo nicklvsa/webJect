@@ -51,7 +51,7 @@ func (macos *MacOS) GetBundleIdentifierByApp(appName string) (string, error) {
 	var stdErr bytes.Buffer
 	strCmd := fmt.Sprintf(`'id of app "%s"'`, appName)
 
-	cmd := exec.Command("osascript", "-e", strCmd)
+	cmd := exec.Command("/usr/bin/osascript", "-e", strCmd)
 	cmd.Stdout = &stdOut
 	cmd.Stderr = &stdErr
 	cmd.Stdin = os.Stdin
