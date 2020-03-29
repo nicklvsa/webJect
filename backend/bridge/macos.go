@@ -1,8 +1,9 @@
 package bridge
 
 import (
-	"fmt"
 	"webject/shared"
+
+	"github.com/artdarek/go-unzip"
 )
 
 //consts for macos
@@ -19,14 +20,18 @@ type MacOS int
 
 //AddTweakPlugin - creates a new tweak by
 func (os *MacOS) AddTweakPlugin(fileName string) error {
-	files, err := shared.Decompress(fileName, InstallDirName)
+	/*files, err := shared.Decompress(fileName, InstallDirName)
+	if err != nil {
+		return err
+	}*/
+
+	uz := unzip.New(fileName, InstallDirName)
+	err := uz.Extract()
 	if err != nil {
 		return err
 	}
 
-	logger.Info(fmt.Sprintf("Files Unzipped: %s", files))
-
-	err = shared.CleanDecompression(fileName, InstallDirName)
+	err = shared.CleanDecompression(fileName)
 	if err != nil {
 		return err
 	}

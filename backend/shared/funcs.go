@@ -107,8 +107,8 @@ func Decompress(src string, dest string) ([]string, error) {
 }
 
 //CleanDecompression - removes the zip files after extraction
-func CleanDecompression(name, path string) error {
-	err := os.Remove(path + string(os.PathSeparator) + name)
+func CleanDecompression(name string) error {
+	err := os.Remove(name)
 	if err != nil {
 		return err
 	}
