@@ -50,64 +50,60 @@ func IsMacOS() bool {
 }
 
 //Decompress - unzips a zip file
-func Decompress(src, dest string) error {
-	read, err := zip.OpenReader(src)
+func Decompress(src string, dest string) ([]string, error) {
+
+	var filenames []string
+
+	r, err := zip.OpenReader(src)
 	if err != nil {
-		return err
+		return filenames, err
 	}
+	defer r.Close()
 
-	defer func() {
-		if err := read.Close(); err != nil {
-			panic(err)
+	for _, f := range r.File {
+
+		// Store filename/path for returning and using later on
+		fpath := filepath.Join(dest, f.Name)
+
+		// Check for ZipSlip. More Info: http://bit.ly/2MsjAWE
+		if !strings.HasPrefix(fpath, filepath.Clean(dest)+string(os.PathSeparator)) {
+			return filenames, fmt.Errorf("%s: illegal file path", fpath)
 		}
-	}()
 
-	os.MkdirAll(dest, 0755)
+		filenames = append(filenames, fpath)
 
-	extractAndWrite := func(file *zip.File) error {
-		rc, err := file.Open()
+		if f.FileInfo().IsDir() {
+			// Make Folder
+			os.MkdirAll(fpath, os.ModePerm)
+			continue
+		}
+
+		// Make File
+		if err = os.MkdirAll(filepath.Dir(fpath), os.ModePerm); err != nil {
+			return filenames, err
+		}
+
+		outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 		if err != nil {
-			return err
+			return filenames, err
 		}
 
-		defer func() {
-			if err := rc.Close(); err != nil {
-				panic(err)
-			}
-		}()
-
-		path := filepath.Join(dest, file.Name)
-		if file.FileInfo().IsDir() {
-			os.MkdirAll(path, file.Mode())
-		} else {
-			os.MkdirAll(filepath.Dir(path), file.Mode())
-			f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, file.Mode())
-			if err != nil {
-				return err
-			}
-
-			defer func() {
-				if err := f.Close(); err != nil {
-					panic(err)
-				}
-			}()
-
-			_, err = io.Copy(f, rc)
-			if err != nil {
-				return err
-			}
-		}
-		return nil
-	}
-
-	for _, f := range read.File {
-		err := extractAndWrite(f)
+		rc, err := f.Open()
 		if err != nil {
-			return err
+			return filenames, err
+		}
+
+		_, err = io.Copy(outFile, rc)
+
+		// Close the file without defer to close before next iteration of loop
+		outFile.Close()
+		rc.Close()
+
+		if err != nil {
+			return filenames, err
 		}
 	}
-
-	return nil
+	return filenames, nil
 }
 
 //CleanDecompression - removes the zip files after extraction

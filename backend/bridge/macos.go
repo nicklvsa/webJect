@@ -19,11 +19,12 @@ type MacOS int
 
 //AddTweakPlugin - creates a new tweak by
 func (os *MacOS) AddTweakPlugin(fileName string) error {
-	logger.Info(fmt.Sprintf("FILE NAME: %s", fileName))
-	err := shared.Decompress(fileName, InstallDirName)
+	files, err := shared.Decompress(fileName, InstallDirName)
 	if err != nil {
 		return err
 	}
+
+	logger.Info(fmt.Sprintf("Files Unzipped: %s", files))
 
 	err = shared.CleanDecompression(fileName, InstallDirName)
 	if err != nil {
