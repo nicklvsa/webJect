@@ -1,6 +1,7 @@
 package bridge
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"webject/shared"
@@ -43,8 +44,8 @@ func (macos *MacOS) RemoveTweakPlugin(pkgID string) error {
 }
 
 //GetBundleIdentifierByApp - returns a mac app's bundle identifier by its path
-func (macos *MacOS) GetBundleIdentifierByApp(appPath string) (string, error) {
-	out, err := exec.Command("mdls", "-name ", "kMDItemCFBundleIdentifier ", "-r ", appPath).Output()
+func (macos *MacOS) GetBundleIdentifierByApp(appName string) (string, error) {
+	out, err := exec.Command("osascript", "-e", fmt.Sprintf("'id of app \"%s\"'", appName)).Output()
 	if err != nil {
 		return "", err
 	}
