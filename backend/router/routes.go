@@ -122,7 +122,17 @@ func TweakAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 		if id, ok := removalData["pkg_id"]; ok {
 			if id != "" {
-
+				macOS := new(bridge.MacOS)
+				err := macOS.RemoveTweakPlugin(id)
+				if err != nil {
+					response := shared.BuildResponse(1, nil, fmt.Sprintf("Could not remove tweak! Error: %s", err.Error()), w)
+					w.Write(response)
+					return
+				}
+			} else {
+				response := shared.BuildResponse(1, nil, "Could not remove tweak! Identifier was left empty!", w)
+				w.Write(response)
+				return
 			}
 		} else {
 			response := shared.BuildResponse(1, nil, "Package ID could not be found!", w)
