@@ -1,6 +1,7 @@
 package bridge
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
@@ -45,17 +46,18 @@ func (macos *MacOS) RemoveTweakPlugin(pkgID string) error {
 
 //GetBundleIdentifierByApp - returns a mac app's bundle identifier by its path
 func (macos *MacOS) GetBundleIdentifierByApp(appName string) (string, error) {
+
+	var stdOut bytes.Buffer
+	var stdErr bytes.Buffer
+
 	cmd := exec.Command("osascript", "-e", fmt.Sprintf("'id of app \"%s\"'", appName))
+	cmd.Stdout = &stdOut
+	cmd.Stderr = &stdErr
 
 	err := cmd.Run()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("STD_ERR: %s || GO_ERR: %s", stdErr.String(), err.Error())
 	}
 
-	out, err := cmd.Output()
-	if err != nil {
-		return "", err
-	}
-
-	return string(out), nil
+	return stdOut.String(), nil
 }
