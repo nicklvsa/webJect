@@ -46,7 +46,7 @@ func IsWindows() bool {
 
 //IsMacOS - returns if the operating system is macos or not
 func IsMacOS() bool {
-	return strings.Contains(runtime.GOOS, "mac")
+	return strings.Contains(runtime.GOOS, "darwin")
 }
 
 //Decompress - unzips a zip file
