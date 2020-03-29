@@ -44,7 +44,7 @@ func (macos *MacOS) RemoveTweakPlugin(pkgID string) error {
 
 //GetBundleIdentifierByApp - returns a mac app's bundle identifier by its path
 func (macos *MacOS) GetBundleIdentifierByApp(appPath string) (string, error) {
-	out, err := exec.Command("mdls ", "-name", "kMDItemCFBundleIdentifier", "-r", appPath).Output()
+	out, err := exec.Command("mdls", "-name ", "kMDItemCFBundleIdentifier", "-r ", appPath).Output()
 	if err != nil {
 		return "", err
 	}
