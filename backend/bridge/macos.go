@@ -4,7 +4,7 @@ import "webject/shared"
 
 //consts for macos
 const (
-	InstallDirName = "/Library/macStr8t/Plugins"
+	InstallDirName = "/Library/macSubstrate/Plugins"
 )
 
 //MacOS - macos type
