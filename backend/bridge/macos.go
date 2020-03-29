@@ -54,6 +54,8 @@ func (macos *MacOS) GetBundleIdentifierByApp(appName string) (string, error) {
 	cmd.Stdout = &stdOut
 	cmd.Stderr = &stdErr
 
+	fmt.Println(cmd.String())
+
 	err := cmd.Run()
 	if err != nil {
 		return "", fmt.Errorf("STD_ERR: %s || GO_ERR: %s", stdErr.String(), err.Error())
