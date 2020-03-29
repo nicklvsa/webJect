@@ -45,9 +45,17 @@ func (macos *MacOS) RemoveTweakPlugin(pkgID string) error {
 
 //GetBundleIdentifierByApp - returns a mac app's bundle identifier by its path
 func (macos *MacOS) GetBundleIdentifierByApp(appName string) (string, error) {
-	out, err := exec.Command("osascript", "-e", fmt.Sprintf("'id of app \"%s\"'", appName)).Output()
+	cmd := exec.Command("osascript", "-e", fmt.Sprintf("'id of app \"%s\"'", appName))
+
+	err := cmd.Run()
 	if err != nil {
 		return "", err
 	}
+
+	out, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
 	return string(out), nil
 }
