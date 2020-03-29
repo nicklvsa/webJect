@@ -83,6 +83,10 @@ func TweakAPIHandler(w http.ResponseWriter, r *http.Request) {
 					w.Write(response)
 					return
 				}
+
+				response := shared.BuildResponse(0, "Tweak has been installed!", nil, w)
+				w.Write(response)
+				return
 			} else if shared.IsWindows() {
 				/*windows := new(bridge.Windows)
 				err := windows.AddTweakPlugin(newPath)
@@ -116,10 +120,19 @@ func TweakAPIHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		/*
-			TODO: add code to remove a tweak
-		*/
+		if id, ok := removalData["pkg_id"]; ok {
+			if id != "" {
 
+			}
+		} else {
+			response := shared.BuildResponse(1, nil, "Package ID could not be found!", w)
+			w.Write(response)
+			return
+		}
+
+		response := shared.BuildResponse(0, "Finished removing tweak!", nil, w)
+		w.Write(response)
+		return
 	default:
 		response := shared.BuildResponse(1, nil, fmt.Sprintf("Action %s was not defined!", action), w)
 		w.Write(response)

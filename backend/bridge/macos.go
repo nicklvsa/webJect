@@ -1,6 +1,7 @@
 package bridge
 
 import (
+	"os"
 	"webject/shared"
 )
 
@@ -17,7 +18,7 @@ var (
 type MacOS int
 
 //AddTweakPlugin - creates a new tweak by
-func (os *MacOS) AddTweakPlugin(fileName string) error {
+func (macos *MacOS) AddTweakPlugin(fileName string) error {
 	/*files, err := shared.Decompress(fileName, InstallDirName)
 	if err != nil {
 		return err
@@ -36,6 +37,10 @@ func (os *MacOS) AddTweakPlugin(fileName string) error {
 }
 
 //RemoveTweakPlugin - removes a tweak by modifier id
-func (os *MacOS) RemoveTweakPlugin(pkgID string) error {
+func (macos *MacOS) RemoveTweakPlugin(pkgID string) error {
+	err := shared.RemoveWalkDirs(InstallDirName + string(os.PathSeparator) + pkgID)
+	if err != nil {
+		return err
+	}
 	return nil
 }
