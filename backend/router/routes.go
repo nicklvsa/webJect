@@ -143,6 +143,50 @@ func TweakAPIHandler(w http.ResponseWriter, r *http.Request) {
 		response := shared.BuildResponse(0, "Finished removing tweak!", nil, w)
 		w.Write(response)
 		return
+
+	case "get_identifier":
+
+		identifierData := make(map[string]string)
+		err := json.NewDecoder(r.Body).Decode(&identifierData)
+		if err != nil {
+			response := shared.BuildResponse(1, nil, fmt.Sprintf("Could not understand response from /get_identifier! Error: %s", err.Error()), w)
+			w.Write(response)
+			return
+		}
+
+		if appPath, ok := identifierData["app_path"]; ok {
+			if appPath != "" {
+				if shared.IsMacOS() {
+					macOS := new(bridge.MacOS)
+					bundle, err := macOS.GetBundleIdentifierByApp(appPath)
+					if err != nil {
+						response := shared.BuildResponse(1, nil, fmt.Sprintf("Could not get bundle id from app path! Error: %s", err.Error()), w)
+						w.Write(response)
+						return
+					}
+
+					response := shared.BuildResponse(0, fmt.Sprintf("Bundle Identifier: %s", bundle), nil, w)
+					w.Write(response)
+					return
+				} else if shared.IsWindows() {
+					response := shared.BuildResponse(1, nil, "A Windows code injection runtime is in the works! Currently unsupported!", w)
+					w.Write(response)
+					return
+				} else {
+					response := shared.BuildResponse(1, nil, fmt.Sprintf("Operating System unsupported! Detected OS: %s", runtime.GOOS), w)
+					w.Write(response)
+					return
+				}
+			} else {
+				response := shared.BuildResponse(1, nil, "Could not get identifier! App path was left empty!", w)
+				w.Write(response)
+				return
+			}
+		} else {
+			response := shared.BuildResponse(1, nil, "Package ID could not be found!", w)
+			w.Write(response)
+			return
+		}
 	default:
 		response := shared.BuildResponse(1, nil, fmt.Sprintf("Action %s was not defined!", action), w)
 		w.Write(response)

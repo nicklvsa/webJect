@@ -55,6 +55,7 @@ func Decompress(src, dest string) error {
 	if err != nil {
 		return err
 	}
+
 	defer func() {
 		if err := r.Close(); err != nil {
 			panic(err)
@@ -69,6 +70,7 @@ func Decompress(src, dest string) error {
 		if err != nil {
 			return err
 		}
+
 		defer func() {
 			if err := rc.Close(); err != nil {
 				panic(err)
@@ -93,11 +95,13 @@ func Decompress(src, dest string) error {
 				return err
 			}
 		} else {
+
 			os.MkdirAll(filepath.Dir(path), f.Mode())
 			f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 			if err != nil {
 				return err
 			}
+
 			defer func() {
 				if err = f.Close(); err != nil {
 					panic(err)

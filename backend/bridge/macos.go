@@ -1,7 +1,9 @@
 package bridge
 
 import (
+	"fmt"
 	"os"
+	"os/exec"
 	"webject/shared"
 )
 
@@ -19,10 +21,6 @@ type MacOS int
 
 //AddTweakPlugin - creates a new tweak by
 func (macos *MacOS) AddTweakPlugin(fileName string) error {
-	/*files, err := shared.Decompress(fileName, InstallDirName)
-	if err != nil {
-		return err
-	}*/
 	err := shared.Decompress(fileName, InstallDirName)
 	if err != nil {
 		return err
@@ -43,4 +41,13 @@ func (macos *MacOS) RemoveTweakPlugin(pkgID string) error {
 		return err
 	}
 	return nil
+}
+
+//GetBundleIdentifierByApp - returns a mac app's bundle identifier by its path
+func (macos *MacOS) GetBundleIdentifierByApp(appPath string) (string, error) {
+	out, err := exec.Command("mdls", "-name kMDItemCFBundleIdentifier", fmt.Sprintf("-r %s", appPath)).Output()
+	if err != nil {
+		return "", err
+	}
+	return string(out), nil
 }
