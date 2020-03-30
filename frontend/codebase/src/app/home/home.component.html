@@ -1,0 +1,55 @@
+<div class="container container-body">
+    <h1 style="text-align: center;">Inject a new tweak below:</h1>
+    <div class="columns">
+        <div class="column">
+            <div class="field">
+                <label class="label">Bundle Identifier</label>
+                <div class="control">
+                    <input class="input"  style="width: 50%;" type="text" placeholder="com.example.Application" />
+                </div>
+                <p class="help">Enter the application's bundle identifier to hook.</p>
+            </div>
+            <div class="field">
+                <label class="label">Choose tweak file</label>
+                <div class="file has-name">
+                    <label class="file-label">
+                      <input class="file-input" type="file" name="resume">
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Choose Tweak
+                        </span>
+                      </span>
+                      <span class="file-name">
+                        some file name
+                      </span>
+                    </label>
+                  </div>
+                  <p class="help">Select a ZIP file that contains your compressed tweak.</p>
+            </div>
+            <div class="field">
+                <button type="button" (click)="addTweak()" class="button is-link is-outlined">Add Tweak</button>
+            </div>
+        </div>
+        <div class="column">
+            <div class="field">
+                <label class="label">App Name</label>
+                <div class="control">
+                    <input class="input" style="width: 50%;" type="text" placeholder="Finder" #appName />
+                </div>
+                <p class="help">Enter the app name.</p>
+            </div>
+            <div class="field">
+                <button type="button" (click)="getID()" class="button is-link is-outlined">Get ID</button>
+            </div>
+            <div class="field">
+                <label class="label container-body">Bundle Identifier: </label>
+                <p>
+                    {{pkgID}}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

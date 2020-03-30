@@ -1,0 +1,39 @@
+$footer-color: #232F3E;
+$footer-title-size: 25px;
+
+.footer {
+    height: 100%;
+    max-height: 50vh;
+    padding-top: 30px;
+    padding-bottom: 0;
+    background-color: $footer-color;
+    text-align: center;
+}
+
+.styled-footer-container {
+    padding-top: 25px;
+}
+
+.footer-title {
+    font-size: $footer-title-size;
+}
+
+.footer-link-color {
+    color: white;
+}
+
+.footer-title-starter {
+    padding-bottom: 20px;
+}
+
+.footer-link {
+    padding: 40px;
+}
+
+.footer-slogan {
+    padding-top: 10px;
+}
+
+.footer-link:hover {
+    color: #1F9CED;
+}

@@ -1,0 +1,27 @@
+<nav class="navbar wj-nav" role="navigation" aria-label="main nav">
+    <div class="navbar-brand">
+        <a class="navbar-item" routerLink="">
+            <h1 class="title title-nav nav-link">webJect</h1>
+        </a>
+        <a (click)="toggleNav()" #navBurger role="button" class="navbar-burger burger" aria-label="menu" aria-expended="false" data-target="nav">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="nav" class="navbar-menu" #navMenu>
+        <div class="navbar-start">
+            <a class="navbar-item nav-link" routerLink="">Home</a>
+            <a class="navbar-item nav-link" routerLink="about">About</a>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a class="button is-fullwidth is-link"><strong>Learn More</strong></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

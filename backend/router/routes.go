@@ -165,7 +165,7 @@ func TweakAPIHandler(w http.ResponseWriter, r *http.Request) {
 						return
 					}
 
-					response := shared.BuildResponse(0, fmt.Sprintf("Bundle Identifier: %s", bundle), nil, w)
+					response := shared.BuildResponse(0, bundle, nil, w)
 					w.Write(response)
 					return
 				} else if shared.IsWindows() {

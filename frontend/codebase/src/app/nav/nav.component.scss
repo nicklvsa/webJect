@@ -1,0 +1,33 @@
+$nav-font: 'Farro', sans-serif;
+$nav-color: #232F3E;
+
+.nav-title-2 {
+    font-family: $nav-font;
+    font-style: italic;
+}
+
+.navbar-burger {
+    height: 75px;
+    color: white;
+}
+
+.is-active {
+    background-color: $nav-color;
+}
+
+.has-dropdown:hover {
+    background-color: blue;
+}
+
+.nav-link {
+    color: white;
+}
+
+.wj-nav {
+    height: 75px;
+    background-color: $nav-color;
+}
+
+.title-nav:hover {
+    border-bottom: 2px solid #fff;
+}
