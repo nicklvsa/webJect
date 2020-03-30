@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
     console.log(jsonData);
     axios.post('http://localhost:8081/tweak/identify', jsonData).then((response) => {
       console.log(response.data);
-      this.pkgID = response.data['content_msg'];
+      this.pkgID = response.data['content_msg'] || response.data['err_msg'];
     }).catch((err) => {
       console.log(err);
     });
