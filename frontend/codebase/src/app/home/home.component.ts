@@ -13,6 +13,8 @@ export class HomeComponent implements OnInit {
   constructor() { }
 
   @ViewChild('appname') appName: ElementRef;
+  @ViewChild('bundleid') bundleID: ElementRef;
+  @ViewChild('zipfile') zipFile: ElementRef;
 
   getID() {
     const data = {
@@ -28,7 +30,17 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  addTweak() {}
+  addTweak() {
+    const file = this.zipFile.nativeElement.file.files[0];
+    const id = this.bundleID.nativeElement.value;
+    if (id !== '' && file != null) {
+      axios.post('http://localhost:8081/tweak/add', file).then((response) => {
+        console.log(response.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
 
   ngOnInit(): void {
   }
