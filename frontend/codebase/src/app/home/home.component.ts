@@ -15,10 +15,16 @@ export class HomeComponent implements OnInit {
   @ViewChild('appName', { read: ElementRef }) appName: ElementRef;
 
   getID() {
-    const data = {
-      app_path: this.appName.nativeElement.value
-    };
-    axios.post('http://localhost:8081/tweak/identify', {data}).then((response) => {
+    axios({
+      method: 'post',
+      url: 'http://localhost:8081/tweak/identify',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        app_path: this.appName.nativeElement.value
+      }
+    }).then((response) => {
       console.log(response.data);
       const dataRes = JSON.parse(response.data);
       this.pkgID = dataRes;
