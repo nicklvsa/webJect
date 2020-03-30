@@ -19,8 +19,9 @@ export class HomeComponent implements OnInit {
       app_path: this.appName.nativeElement.value
     };
     axios.post('http://localhost:8081/tweak/identify', {data}).then((response) => {
-      const respData = JSON.parse(response.data);
-      this.pkgID = respData;
+      console.log(response.data);
+      const dataRes = JSON.parse(response.data);
+      this.pkgID = dataRes;
     }).catch((err) => {
       console.log(err);
     });
