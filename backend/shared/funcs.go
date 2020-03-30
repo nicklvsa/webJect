@@ -22,6 +22,7 @@ var (
 func BuildResponse(errCode int, contentMsg, errMsg interface{}, w http.ResponseWriter) []byte {
 
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Origin")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 
 	apiResponse := &APIResponse{
